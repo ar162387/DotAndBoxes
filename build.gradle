@@ -1,3 +1,10 @@
+buildscript {
+    repositories {
+        maven { url 'https://hopper.une.edu.au/artifactory/libs-release/' }
+        mavenCentral()
+    }
+}
+
 plugins {
     id 'application'
     id 'org.openjfx.javafxplugin' version '0.0.9'
@@ -11,7 +18,9 @@ javafx {
 group 'org.example'
 version '1.0-SNAPSHOT'
 
+
 repositories {
+    maven { url 'https://hopper.une.edu.au/artifactory/libs-release/' }
     mavenCentral()
 }
 
@@ -27,3 +36,6 @@ test {
 application {
     mainClass = 'dotsandboxes.Main'
 }
+
+// fix for reflectexception
+modularity.disableEffectiveArgumentsAdjustment()
