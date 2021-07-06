@@ -1,7 +1,10 @@
 package dotsandboxes;
 
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Observer;
+import java.util.function.Consumer;
 
 /**
  * The state of a dots and boxes grid.
@@ -43,14 +46,59 @@ public class DotsAndBoxesGrid {
     /** Which owner (if any) claimed any given box. */
     private int[][] boxOwners;
 
-    public DotsAndBoxesGrid(int width, int height) {
+    /** A list of functions to notify when there is an update */
+    private ArrayList<Consumer<DotsAndBoxesGrid>> watchers = new ArrayList<>();
+
+    final int players;
+    private int player = 1;
+    public int getPlayer() {
+        return player;
+    }
+
+    /** Moves to the next player */
+    private void nextPlayer() {
+        player++;
+        if (player > players) {
+            player = 1;
+        }
+    }
+
+    public DotsAndBoxesGrid(int width, int height, int players) {
         this.width = width;
         this.height = height;
+        this.players = players;
 
         this.horizontals = new boolean[width - 1][height];
         this.verticals = new boolean[width][height - 1];
         this.boxOwners = new int[width - 1][height - 1];
     }
+
+    private void notifyObservers() {
+        for (Consumer<DotsAndBoxesGrid> consumer : watchers) {
+            consumer.accept(this);
+        }
+    }
+
+    /** Listens to this grid for changes */
+    public void addConsumer(Consumer<DotsAndBoxesGrid> consumer) {
+        watchers.add(consumer);
+    }
+
+    /** Returns whether a horizontal line has been drawn */
+    public boolean getHorizontal(int x, int y) {
+        return horizontals[x][y];
+    }
+
+    /** Returns whether a vertical line has been drawn */
+    public boolean getVertical(int x, int y) {
+        return verticals[x][y];
+    }
+
+    /** Returns which player owns a box. By convention, 0 is unowned. */
+    public int getBoxOwner(int x, int y) {
+        return boxOwners[x][y];
+    }
+
 
     /**
      * Checks whether a box has been fully drawn (all four sides)
@@ -59,16 +107,23 @@ public class DotsAndBoxesGrid {
      * @return true if all four sides have been drawn.
      */
     public boolean boxComplete(int x, int y) {
-        if (x >= width - 1 || x < 0) {
-            throw new IndexOutOfBoundsException(String.format("x was %d, which is out of range. Range is 0 to %d", x, width - 1));
-        }
-        if (y >= height - 1|| y < 0) {
-            throw new IndexOutOfBoundsException(String.format("y was %d, which is out of range. Range is 0 to %d", y, height - 1));
+        if (x >= width - 1 || x < 0 || y >= height - 1 || y < 0) {
+            return false;
         }
 
         // A box is complete if the north and south horizontals and the east and west verticals have all been drawn.
         // FIXME: You'll need to fix this code (after writing a test first).
         return true;
+    }
+
+    /** Tries to claim a box for a player. If the box is complete, sets the ownership and returns true. */
+    private boolean claimBox(int x, int y, int p) {
+        if (boxComplete(x, y)) {
+            boxOwners[x][y] = player;
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -88,10 +143,16 @@ public class DotsAndBoxesGrid {
         // FIXME: You need to throw an exception if the line was already drawn.
 
         this.horizontals[x][y] = true;
-        if (boxComplete(x, y)) {
-            boxOwners[x][y] = player;
+
+        // Try to claim the north or south boxes
+        boolean claimN = claimBox(x, y-1, player);
+        boolean claimS = claimBox(x, y, player);
+        if (claimN || claimS) {
+            notifyObservers();
             return true;
         } else {
+            nextPlayer();
+            notifyObservers();
             return false;
         }
     }
@@ -113,12 +174,18 @@ public class DotsAndBoxesGrid {
         // You need to throw an exception if the line was already drawn.
 
         this.verticals[x][y] = true;
-        if (boxComplete(x, y)) {
-            boxOwners[x][y] = player;
+        // Try to claim the north or south boxes
+        boolean claimE = claimBox(x, y, player);
+        boolean claimW = claimBox(x-1, y, player);
+        if (claimE || claimW) {
+            notifyObservers();
             return true;
         } else {
+            nextPlayer();
+            notifyObservers();
             return false;
         }
+
     }
 
     public boolean gameComplete() {
