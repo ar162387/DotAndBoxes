@@ -15,7 +15,8 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("Dots and Boxes");
 
-        Label label = new Label("My label");
+        // FIXME: Update this label to show your name and student number
+        Label label = new Label("Name: (Your name and student number goes here)");
 
         BorderPane borderPane = new BorderPane();
         borderPane.setBottom(label);
