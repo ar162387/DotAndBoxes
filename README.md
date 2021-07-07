@@ -23,8 +23,7 @@ Remember, your task *isn't* just to fix the bugs.
 
 Your tasks:
 
-1. Create a repository on gitlab.une.edu.au and push this code to it **entirely unmodified**. 
-   It will be on a branch called 'main'  
+1. Create a repository on gitlab.une.edu.au and push the main branch of this repository to it **entirely unmodified**. 
    **You will need to set the visibility on your repository so that the marker can read from it**. 
    Repositories we cannot access cannot be marked (and will receive 0 until you can fix it)
    
@@ -34,10 +33,11 @@ Your tasks:
    Commit this change and push it to your **main** branch.
 
 3. Create an Issue in your GitLab project for fixing the errors in the assignment.
+   
 4. Create and check out a branch for your bugfix. 
    This should follow the convention of having the issue number, followed by a hyphenated description of the issue.
    e.g. `1-fix-assignment-errors`.  
-   Push this branch to the remote repository. (From here on, I'll refer to this as your "issue branch")
+   Push this branch to your remote repository. (From here on, I'll refer to this as your "issue branch")
 
 5. Create **unit tests** that will detect the errors in the code. Particularly:
    * That the algorithm for testing whether a box is complete is wrong.
@@ -45,8 +45,9 @@ Your tasks:
     
 6. Commit these unit tests with an appropriately descriptive commit message.  
    **Do not fix the bugs in this commit. The unit tests should *fail*.**    
+   Push this commit to your remote repository (on your issue branch)
 
-7. **Tag** this commit, with the label `testsfail`
+7. **Tag** this commit, with the label `testsfail`. Push this tag to your remote repository.
 
 8. Fix the bugs in the code. Run your unit tests again. The tests should now pass.
 
