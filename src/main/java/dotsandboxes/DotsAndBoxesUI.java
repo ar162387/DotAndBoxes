@@ -79,6 +79,10 @@ public class DotsAndBoxesUI {
                     grid.drawHorizontal(x, y, grid.getPlayer());
                 } catch (IllegalStateException ex) {
                     // do nothing
+                    // This is a little artificial, as normally we'd implement this with a check that the line isn't
+                    // already "drawn" and then not calling the function. But for the exercise, we wanted students
+                    // to write a test that would ensure an exception is thrown, so we're relying on an exception
+                    // being thrown!
                 }});
 
                 AnchorPane.setLeftAnchor(line, 0.0 + gap + dotDiameter + col * (gap + lineLength + gap + dotDiameter));
