@@ -3,7 +3,6 @@ package dotsandboxes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Observer;
 import java.util.function.Consumer;
 
 /**

@@ -1,10 +1,10 @@
 ## A Git, GitLab, and JUnit exercise
 
 This assignment is intended to give you a relatively small exercise to give you a little familiarisation working with Git, Gradle,
-JUnit, and JavaFX on a very small codebase - before you and your group do something much more exciting on the much larger
-class-wide project.
+JUnit, and some more recent Java language features on a very small codebase - 
+before you and your group do something much more exciting on the much larger class-wide project.
 
-The example code you have been given is a simple JavaFX "dots and boxes" game. It has a couple of known bugs in it
+The example code you have been given is a simple Java "dots and boxes" game. It has a couple of known bugs in it
 (already commented for you - the task is not really in finding the bugs). Please note: your task **is not simply to fix the bugs**. 
 Your task is a series of steps that show you can work with git, gitlab, gradle, and junit.
 

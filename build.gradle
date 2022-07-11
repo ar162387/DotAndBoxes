@@ -7,12 +7,6 @@ buildscript {
 
 plugins {
     id 'application'
-    id 'org.openjfx.javafxplugin' version '0.0.10'
-}
-
-javafx {
-    version = "15.0.1"
-    modules = [ 'javafx.controls' ]
 }
 
 group 'org.example'
@@ -26,8 +20,8 @@ repositories {
 
 dependencies {
     // Log4J does logging. We'll meet it properly in a later week...
-    implementation 'org.apache.logging.log4j:log4j-api:2.12.0'
-    implementation 'org.apache.logging.log4j:log4j-core:2.12.0'
+    implementation 'org.apache.logging.log4j:log4j-api:2.18.0'
+    implementation 'org.apache.logging.log4j:log4j-core:2.18.0'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
@@ -39,4 +33,14 @@ test {
 
 application {
     mainClass = 'dotsandboxes.Main'
+}
+
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Main-Class': 'dotsandboxes.Main'
+    }
+    baseName = 'executable-jar'
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
 }

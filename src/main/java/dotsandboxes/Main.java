@@ -1,40 +1,32 @@
 package dotsandboxes;
 
-import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.layout.BorderPane;
-import javafx.stage.Stage;
+import javax.swing.*;
+import java.awt.*;
 
 /** Our main class that launches the app. */
-public class Main extends Application {
+public class Main {
+    
+    public static void main(String... args) throws Exception {
 
-    DotsAndBoxesGrid grid = new DotsAndBoxesGrid(15, 8, 2);
-
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        primaryStage.setTitle("Dots and Boxes");
+        JFrame mainWindow = new JFrame("Dots and Boxes");
+        DotsAndBoxesGrid grid = new DotsAndBoxesGrid(15, 8, 2);
 
         // FIXME: Update this label to show your name and student number
-        Label label = new Label("Name: (Your name and student number goes here)");
+        JLabel label = new JLabel("Name: (Your name and student number goes here)");
 
-        BorderPane borderPane = new BorderPane();
-        borderPane.setBottom(label);
-        Scene scene = new Scene(borderPane, 600, 400);
+        JPanel borderPane = new JPanel(new BorderLayout());
+        borderPane.add(label, BorderLayout.SOUTH);
 
         DotsAndBoxesUI dbUi = new DotsAndBoxesUI(grid);
-        borderPane.setCenter(dbUi.anchorPane);
-        borderPane.setTop(dbUi.label);
+        borderPane.add(dbUi.anchorPane, BorderLayout.CENTER);
+        borderPane.add(dbUi.label, BorderLayout.NORTH);
+        mainWindow.add(borderPane);
 
-        primaryStage.setScene(scene);
-
-        primaryStage.show();
+        mainWindow.pack();
+        mainWindow.setVisible(true);
 
         // This sets what to do when we close the main window.
-        // Notice that we are using a "lambda function" (i.e., an anonymously defined function defined within the
-        // call to setOnCloseRequest). These are very useful in GUI code and we'll probably see a lot of them in the
-        // project.
-        primaryStage.setOnCloseRequest((evt) -> System.exit(0));
+        mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
 }
