@@ -80,29 +80,20 @@ Marking.
 As well as being an assignment repository, this codebase is also a sample codebase, showing you a few things:
 
 * It uses a *gradle wrapper* (a script that will download the correct version of gradle for you.) This means you can
-  `gradlew build` and it'll go get gradle before it builds. Normally, that would fetch from a URL on the gradle site,
-  but so this works behind UNE's webproxy, we've got it fetching the gradle jar from a url on turing instead.
-  
-* It is a *modular* application. JavaFX is provided as a set of modules. At the moment, that might seem like an esoteric
-  distinction, but if we wanted to *distribute* our application, it would be helpful. If the app is written as a 
-  modular app (it has a `module-info.java` file), then the `gradlew distZip` task can generate a distributable zip 
-  for us, containing not only our code but also the modules our app depends on (including JavaFX).
+  `./gradlew build` and it'll go get gradle before it builds. Normally, that would fetch from a URL on the gradle site,
+  but so this works behind UNE's webproxy, the gradle jar is also checked into the repository.
   
 * It contains Log4J, which is the logging library (basically, super-powered printlns) that we will use.
 
-* We pass lambdas around, especially as listeners and event handlers. 
-  Lambdas may be familiar to students who've studied Scala, but they are making 
-  their way into Java too. For instance, notice that in `DotsAndBoxesUI` we register a number of listeners onto the dots
-  and boxes grid by registering lambda functions.
+* It uses some more recent Java features. e.g. record classes and lambdas.
+  These may be familiar to students who've studied Scala, but they are making their way into Java too. 
+  For instance, notice that in `DotsAndBoxesUI` we register listeners onto the dots and boxes grid by registering lambda functions.
   
   ```java
-  grid.addConsumer((g) -> {
-      if (g.getHorizontal(x, y)) {
-          line.setStroke(Color.BLACK);
-      } else {
-          line.setStroke(Color.LIGHTGRAY);
-      }
-  });
+   grid.addConsumer((g) -> {
+      updateLabel();
+      canvas.repaint();
+   });
   ```
   
   In Java, functions aren't "first class citizens" in the way they are in Scala, however. Our code here is really 
@@ -112,13 +103,32 @@ As well as being an assignment repository, this codebase is also a sample codeba
   `Consumer<DotsAndBoxesGrid>`. But `Consumer<>` has only one abstract method. So, Java gives us the shorthand
   that if we just describe how we want to implement the abstract method (`(g) -> { ...`) then the Java compiler will 
   fill in the rest of the code about creating an anonymous inner class of type `Consumer<>` for us.
-  
-* JavaFX uses a lot of observable lists. So for instance notice the line for adding a line to the anchorpane:
+
+  Record classes are similar to Scala's "case classes", e.g. 
 
   ```java
-  anchorPane.getChildren().add(line);
+  record Vertical(int col, int row) {
+      Rectangle rect() {
+            int x = corner(col);
+            int y = corner(row) + dotDiameter + gap;
+            return new Rectangle(x, y, dotDiameter, lineLength);
+      }
+
+      /** Whether or not this line contains this point */
+      boolean contains(int x, int y) {
+            return rect().contains(x, y);
+      }
+
+      /** Paints this element, based on the passed in grid */
+      public void draw(DotsAndBoxesGrid grid, Graphics2D g2d) {
+            g2d.setColor(grid.getVertical(col, row) ? Color.DARK_GRAY : Color.LIGHT_GRAY);
+            g2d.fill(this.rect());
+      }
+  }
   ```
 
-  We get the pane's list of children *and we add the line to it*. That *get ... add* code is something that is fairly
-  common in JavaFX code. The list of children is a mutable list that has some triggers on it, so that if you add 
-  an element, JavaFX knows it needs to go and repaint the parent component.
+  Particularly, `col` and `row` are made to be fields of a `Vertical` instance and the constructor is
+  automatically defined. (So is `toString` and `hashCode`, but we're not using those.)
+
+  Record classes aren't as common in Java code-bases, but they're available in Java 17, so students might use 
+  them in the group project, so let's give you a little example of them!
