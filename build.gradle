@@ -1,6 +1,5 @@
 buildscript {
     repositories {
-        maven { url 'https://hopper.une.edu.au/artifactory/libs-release/' }
         mavenCentral()
     }
 }
@@ -14,7 +13,6 @@ version '1.0-SNAPSHOT'
 
 
 repositories {
-    maven { url 'https://hopper.une.edu.au/artifactory/libs-release/' }
     mavenCentral()
 }
 
@@ -33,6 +31,12 @@ test {
 
 application {
     mainClass = 'dotsandboxes.Main'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
 }
 
 task fatJar(type: Jar) {
