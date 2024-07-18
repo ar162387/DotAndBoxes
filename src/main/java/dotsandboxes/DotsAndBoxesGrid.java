@@ -109,10 +109,9 @@ public class DotsAndBoxesGrid {
         if (x >= width - 1 || x < 0 || y >= height - 1 || y < 0) {
             return false;
         }
-
         // A box is complete if the north and south horizontals and the east and west verticals have all been drawn.
         // FIXME: You'll need to fix this code (after writing a test first).
-        return true;
+        return horizontals[x][y] && horizontals[x][y + 1] && verticals[x][y] && verticals[x + 1][y];
     }
 
     /** Tries to claim a box for a player. If the box is complete, sets the ownership and returns true. */
@@ -137,6 +136,9 @@ public class DotsAndBoxesGrid {
         }
         if (y >= height || y < 0) {
             throw new IndexOutOfBoundsException(String.format("y was %d, which is out of range. Range is 0 to %d", y, height));
+        }
+        if (horizontals[x][y]) {
+            throw new IllegalStateException("Line has already been drawn");
         }
 
         // FIXME: You need to throw an exception if the line was already drawn.
@@ -168,6 +170,9 @@ public class DotsAndBoxesGrid {
         }
         if (y >= height - 1 || y < 0) {
             throw new IndexOutOfBoundsException(String.format("y was %d, which is out of range. Range is 0 to %d", y, height - 1));
+        }
+        if (verticals[x][y]) {
+            throw new IllegalStateException("Line has already been drawn");
         }
 
         // You need to throw an exception if the line was already drawn.
