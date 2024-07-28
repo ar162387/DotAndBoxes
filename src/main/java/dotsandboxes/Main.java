@@ -12,7 +12,7 @@ public class Main {
         DotsAndBoxesGrid grid = new DotsAndBoxesGrid(15, 8, 2);
 
         // FIXME: Update this label to show your name and student number
-        JLabel label = new JLabel("Name: (Your name and student number goes here)");
+        JLabel label = new JLabel("Name: Naba Khan");
 
         JPanel borderPane = new JPanel(new BorderLayout());
         borderPane.add(label, BorderLayout.SOUTH);
